@@ -26,7 +26,6 @@
 	<entry name="supported" overwrite="true">outbound</entry>
   </section>
   <section name="nat_policy_default_values">
-	<entry name="stun_server" overwrite="true">stun.linphone.org</entry>
 	<entry name="protocols" overwrite="true">stun,ice</entry>
   </section>
   <section name="sip">

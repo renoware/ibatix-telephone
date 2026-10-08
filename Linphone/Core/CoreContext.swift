@@ -626,6 +626,13 @@ class CoreContext: ObservableObject {
 	}
 	
 	func runMigration() {
+		// ibatix : aucun service linphone.org, y compris pour une installation déjà configurée
+		// (le linphonerc-default n'est copié qu'à la première installation)
+		for (section, key) in [("misc", "log_collection_upload_server_url"), ("misc", "file_transfer_server_url"),
+							   ("misc", "version_check_url_root"), ("account_creator", "url")] {
+			self.mCore.config?.setString(section: section, key: key, value: "")
+		}
+		
 		// Migration
 		let currentVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0"
 		let lastMigration = UserDefaults.standard.string(forKey: "lastMigrationVersion") ?? "0"
@@ -642,9 +649,9 @@ class CoreContext: ObservableObject {
 	func runMigration600() {
 		self.mCore.config!.setBool(section: "sip", key: "auto_answer_replacing_calls", value: false)
 		self.mCore.config!.setBool(section: "sip", key: "deliver_imdn", value: false)
-		self.mCore.config!.setString(section: "misc", key: "log_collection_upload_server_url", value: "https://files.linphone.org:443/http-file-transfer-server/hft.php")
-		self.mCore.config!.setString(section: "misc", key: "file_transfer_server_url", value: "https://files.linphone.org:443/http-file-transfer-server/hft.php")
-		self.mCore.config!.setString(section: "misc", key: "version_check_url_root", value: "https://download.linphone.org/releases")
+		self.mCore.config!.setString(section: "misc", key: "log_collection_upload_server_url", value: "")
+		self.mCore.config!.setString(section: "misc", key: "file_transfer_server_url", value: "")
+		self.mCore.config!.setString(section: "misc", key: "version_check_url_root", value: "")
 		
 		self.mCore.imdnToEverybodyThreshold = 1
 		self.imdnToEverybodyThreshold = self.mCore.imdnToEverybodyThreshold == 1

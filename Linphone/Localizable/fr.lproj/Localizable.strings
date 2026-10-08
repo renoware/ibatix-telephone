@@ -645,3 +645,4 @@
 "early_push_missed_call_body" = "Vous avez reçu un appel alors que votre appareil était verrouillé.";
 
 "ibatix_call_action_fiche" = "Fiche";
+"ibatix_notification_fiche_body" = "Touchez pour ouvrir le dossier de l’appelant";

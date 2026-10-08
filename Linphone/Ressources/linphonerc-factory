@@ -45,7 +45,8 @@ store_friends=0
 record_aware=1
 
 [account_creator]
-url=https://subscribe.linphone.org/api/
+# ibatix : pas de création de compte linphone.org (les comptes viennent du QR code Odoo)
+url=
 backend=1
 
 [lime]
@@ -53,5 +54,10 @@ lime_update_threshold=86400
 
 [alerts]
 alerts_enabled=1
+
+[ui]
+# ibatix : seulement la téléphonie (la messagerie et les visios Linphone passent par linphone.org)
+disable_chat_feature=1
+disable_meetings_feature=1
 
 ## End of factory rc

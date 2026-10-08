@@ -25,6 +25,7 @@ import linphonesw
 import AVFoundation
 import os
 import SwiftUI
+import UserNotifications
 
 class CallInfo {
 	var callId: String = ""
@@ -72,7 +73,7 @@ class ProviderDelegate: NSObject {
 	static var providerConfiguration: CXProviderConfiguration {
 		let providerConfiguration = CXProviderConfiguration()
 		// providerConfiguration.ringtoneSound = ConfigManager.instance().lpConfigBoolForKey(key: "use_device_ringtone") ? nil : "notes_of_the_optimistic.caf"
-		providerConfiguration.supportsVideo = true
+		providerConfiguration.supportsVideo = false // ibatix : téléphonie seule, pas de bouton Vidéo sur l'écran d'iOS
 		providerConfiguration.iconTemplateImageData = UIImage(named: "linphone")?.pngData()
 		providerConfiguration.supportedHandleTypes = [.generic, .phoneNumber, .emailAddress]
 		
@@ -248,9 +249,27 @@ extension ProviderDelegate: CXProviderDelegate {
 			
 			if call != nil {
 				TelecomManager.shared.acceptCall(core: core, call: call!, hasVideo: call!.params?.videoEnabled ?? false)
+				let ficheUrl = CallViewModel.ibatixFicheUrl(
+					odooUrl: core.config?.getString(section: "ibatix", key: "odoo_url", defaultString: "") ?? "",
+					numero: call!.remoteAddress?.username ?? "")
+				self.notifierFicheIbatix(url: ficheUrl, nom: callInfo?.displayName ?? call!.remoteAddress?.displayName ?? call!.remoteAddress?.username ?? "")
 			}
 			
 			action.fulfill()
+		}
+	}
+	
+	// ibatix : décroché depuis l'écran d'iOS (app en arrière-plan) → une notification ouvre la fiche
+	// Odoo d'un appui, sans passer par l'app. Identifiant fixe : la suivante remplace la précédente.
+	private func notifierFicheIbatix(url: URL?, nom: String) {
+		guard let url = url else { return }
+		DispatchQueue.main.async {
+			guard UIApplication.shared.applicationState != .active else { return } // le bouton Fiche est déjà à l'écran
+			let contenu = UNMutableNotificationContent()
+			contenu.title = nom.isEmpty ? String(localized: "ibatix_call_action_fiche") : "\(String(localized: "ibatix_call_action_fiche")) · \(nom)"
+			contenu.body = String(localized: "ibatix_notification_fiche_body")
+			contenu.userInfo = ["ibatix_fiche": url.absoluteString]
+			UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: "ibatix-fiche", content: contenu, trigger: nil))
 		}
 	}
 	

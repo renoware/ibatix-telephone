@@ -650,3 +650,4 @@
 "early_push_missed_call_body" = "You received a call while your device was locked.";
 
 "ibatix_call_action_fiche" = "Record";
+"ibatix_notification_fiche_body" = "Tap to open the caller’s record";

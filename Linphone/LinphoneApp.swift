@@ -71,6 +71,12 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
 	func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
 		let userInfo = response.notification.request.content.userInfo
 		
+		if let fiche = userInfo["ibatix_fiche"] as? String, let url = URL(string: fiche) {
+			DispatchQueue.main.async { UIApplication.shared.open(url) }
+			completionHandler()
+			return
+		}
+		
 		if let callId = userInfo["CallId"] as? String, let peerAddr = userInfo["peer_addr"] as? String, let localAddr = userInfo["local_addr"] as? String {
 			if self.navigationManager != nil {
 				self.navigationManager!.selectedCallId = callId

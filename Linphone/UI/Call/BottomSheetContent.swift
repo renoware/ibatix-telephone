@@ -641,7 +641,7 @@ struct BottomSheetContent: View {
 							.frame(width: basePortraitSize, height: buttonPortraitDimension)
 							.hidden()
 							
-							if AppServices.corePreferences.disableChatFeature || !callViewModel.chatEnabled {
+							if callViewModel.ibatixFicheUrl == nil && (AppServices.corePreferences.disableChatFeature || !callViewModel.chatEnabled) { // ibatix : la Fiche occupe déjà la case
 								VStack {
 									Button {
 									} label: {
