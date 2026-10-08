@@ -96,7 +96,25 @@ struct BottomSheetContent: View {
                     
                     Spacer()
                     
-                    if !SharedMainViewModel.shared.disableVideoCall {
+                    // ibatix : « Fiche » toujours visible, à la place de la vidéo (inutile avec le standard)
+                    if callViewModel.ibatixFicheUrl != nil {
+                        Button {
+                            callViewModel.ouvrirFicheIbatix()
+                        } label: {
+                            HStack {
+                                Image("address-book")
+                                    .renderingMode(.template)
+                                    .resizable()
+                                    .foregroundStyle(.white)
+                                    .frame(width: 32, height: 32)
+                            }
+                        }
+                        .buttonStyle(PressedButtonStyle(buttonSize: buttonSize))
+                        .frame(width: buttonSize, height: buttonSize)
+                        .background(Color.orangeMain500)
+                        .cornerRadius(40)
+                        .accessibilityLabel(Text("ibatix_call_action_fiche"))
+                    } else if !SharedMainViewModel.shared.disableVideoCall {
                         ZStack {
                             Button {
                                 if optionsChangeLayout == 3 {
