@@ -40,6 +40,8 @@ class CallViewModel: ObservableObject {
 	@Published var remoteAddressString: String = ""
 	@Published var remoteAddressCleanedString: String = ""
 	@Published var remoteAddress: Address?
+	// bouton « Fiche » : <odoo_url>/telephonie/fiche?numero=… (odoo_url posé par le QR code ibatix)
+	@Published var ibatixFicheUrl: URL?
 	@Published var avatarModel: ContactAvatarModel?
 	@Published var micMutted: Bool = false
 	@Published var isRecording: Bool = false
@@ -221,7 +223,7 @@ class CallViewModel: ObservableObject {
 
 	private func postEarpieceEnforcementNotification() {
 		let content = UNMutableNotificationContent()
-		content.title = "Linphone"
+		content.title = Bundle.main.displayName
 		content.body = String(localized: "notification_earpiece_enforcement_message")
 		content.sound = .default
 
@@ -323,6 +325,9 @@ class CallViewModel: ObservableObject {
 				remoteAddressTmp!.clean()
 				
 				let remoteAddressCleanedStringTmp = remoteAddressTmp != nil ? String(remoteAddressTmp!.asStringUriOnly().dropFirst(4)) : ""
+				let ibatixFicheUrlTmp = CallViewModel.ibatixFicheUrl(
+					odooUrl: core.config?.getString(section: "ibatix", key: "odoo_url", defaultString: "") ?? "",
+					numero: self.currentCall?.remoteAddress?.username ?? "")
 				
 				if self.currentCall?.conference != nil {
 					displayNameTmp = self.currentCall?.conference?.subject ?? ""
@@ -386,6 +391,7 @@ class CallViewModel: ObservableObject {
 					self.remoteAddressString = remoteAddressStringTmp
 					self.remoteAddressCleanedString = remoteAddressCleanedStringTmp
 					self.remoteAddress = remoteAddressTmp
+					self.ibatixFicheUrl = ibatixFicheUrlTmp
 					self.displayName = displayNameTmp
 					
 					self.micMutted = micMuttedTmp
@@ -1432,6 +1438,19 @@ class CallViewModel: ObservableObject {
 		}
 		
 		Log.info("\(CallViewModel.TAG) \(list.count) participants added to conference")
+	}
+	
+	static func ibatixFicheUrl(odooUrl: String, numero: String) -> URL? {
+		let base = odooUrl.trimmingCharacters(in: .whitespaces)
+		guard base.hasPrefix("https://"), !numero.isEmpty else { return nil }
+		var composants = URLComponents(string: base + "/telephonie/fiche")
+		composants?.queryItems = [URLQueryItem(name: "numero", value: numero)]
+		return composants?.url
+	}
+	
+	func ouvrirFicheIbatix() {
+		guard let url = ibatixFicheUrl else { return }
+		UIApplication.shared.open(url)
 	}
 	
 	func createConversation() {

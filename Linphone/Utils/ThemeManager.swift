@@ -34,11 +34,11 @@ final class ThemeManager: ObservableObject {
 	static let shared = ThemeManager()
 	private let themeKey = "selectedTheme"
 	
-	@Published var currentTheme: Theme = ThemeManager.orange
+	@Published var currentTheme: Theme = ThemeManager.ibatix
 	
 	private init() {
 		let storedName = UserDefaults.standard.string(forKey: themeKey)
-		currentTheme = themes[storedName ?? ""] ?? ThemeManager.orange
+		currentTheme = themes[storedName ?? ""] ?? ThemeManager.ibatix
 	}
 	
 	func applyTheme(named name: String) {
@@ -52,6 +52,7 @@ final class ThemeManager: ObservableObject {
 	// MARK: - Theme Presets
 	
 	let themes: [String: Theme] = [
+		ibatix.name: ibatix,
 		orange.name: orange,
 		yellow.name: yellow,
 		green.name: green,
@@ -69,6 +70,13 @@ final class ThemeManager: ObservableObject {
 		titanium.name: titanium,
 		mineral_blue.name: mineral_blue
 	]
+	
+	// vert du logo ibatix (thème par défaut de l'app « ibatix Téléphone »)
+	static let ibatix = Theme(
+		name: "ibatix",
+		main100: Color(hex: "#DDF3E6"),
+		main500: Color(hex: "#00A653")
+	)
 	
 	static let orange = Theme(
 		name: "orange",

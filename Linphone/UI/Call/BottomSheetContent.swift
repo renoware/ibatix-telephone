@@ -439,7 +439,31 @@ struct BottomSheetContent: View {
 						}
 						
 						HStack(spacing: 0) {
-							if !AppServices.corePreferences.disableChatFeature && callViewModel.chatEnabled {
+							// ibatix : le bouton « Fiche » (Odoo) remplace les messages, inutilisés avec le standard
+							if callViewModel.ibatixFicheUrl != nil {
+								VStack {
+									Button {
+										callViewModel.ouvrirFicheIbatix()
+									} label: {
+										HStack {
+											Image("address-book")
+												.renderingMode(.template)
+												.resizable()
+												.foregroundStyle(.white)
+												.frame(width: 32, height: 32)
+										}
+									}
+									.buttonStyle(PressedButtonStyle(buttonSize: buttonSize))
+									.frame(width: buttonSize, height: buttonSize)
+									.background(Color.orangeMain500)
+									.cornerRadius(40)
+									
+									Text("ibatix_call_action_fiche")
+										.foregroundStyle(.white)
+										.default_text_style(styleSize: 15)
+								}
+								.frame(width: basePortraitSize, height: buttonPortraitDimension)
+							} else if !AppServices.corePreferences.disableChatFeature && callViewModel.chatEnabled {
 								VStack {
 									Button {
 										callViewModel.createConversation()
@@ -860,7 +884,31 @@ struct BottomSheetContent: View {
 								.frame(width: baseLandscapeSize, height: buttonLandscapeDimension)
 							}
 							
-							if !AppServices.corePreferences.disableChatFeature && callViewModel.chatEnabled {
+							// ibatix : le bouton « Fiche » (Odoo) remplace les messages, inutilisés avec le standard
+							if callViewModel.ibatixFicheUrl != nil {
+								VStack {
+									Button {
+										callViewModel.ouvrirFicheIbatix()
+									} label: {
+										HStack {
+											Image("address-book")
+												.renderingMode(.template)
+												.resizable()
+												.foregroundStyle(.white)
+												.frame(width: 32, height: 32)
+										}
+									}
+									.buttonStyle(PressedButtonStyle(buttonSize: buttonSize))
+									.frame(width: buttonSize, height: buttonSize)
+									.background(Color.orangeMain500)
+									.cornerRadius(40)
+									
+									Text("ibatix_call_action_fiche")
+										.foregroundStyle(.white)
+										.default_text_style(styleSize: 15)
+								}
+								.frame(width: baseLandscapeSize, height: buttonLandscapeDimension)
+							} else if !AppServices.corePreferences.disableChatFeature && callViewModel.chatEnabled {
 								VStack {
 									Button {
 										callViewModel.createConversation()

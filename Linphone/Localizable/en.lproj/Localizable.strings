@@ -648,3 +648,5 @@
 "early_push_unknown_caller" = "Unknown";
 "early_push_missed_call_title" = "Missed call";
 "early_push_missed_call_body" = "You received a call while your device was locked.";
+
+"ibatix_call_action_fiche" = "Record";
