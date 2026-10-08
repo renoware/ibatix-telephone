@@ -292,13 +292,17 @@ class CoreContext: ObservableObject {
 						MagicSearchSingleton.shared.recreateMagicSearch(core: core)
 					}
 
+					// ibatix Téléphone : équipe Apple de l'app, sinon le SDK annonce « ABCD1234 » dans pn-param
+					let appleTeamId = "MH5VTC85WF"
 					for account in core.accountList {
-						if account.params?.pushNotificationConfig?.provider != ("apns" + pushEnvironment) {
+						if account.params?.pushNotificationConfig?.provider != ("apns" + pushEnvironment)
+							|| account.params?.pushNotificationConfig?.teamId != appleTeamId {
 							let newParams = account.params?.clone()
-							
+
 							Log.info("Account \(String(describing: newParams?.identityAddress?.asStringUriOnly())) - updating apple push provider from \(String(describing: newParams?.pushNotificationConfig?.provider)) to apns\(pushEnvironment)")
 							newParams?.pushNotificationConfig?.provider = "apns" + pushEnvironment
-							
+							newParams?.pushNotificationConfig?.teamId = appleTeamId
+
 							account.params = newParams
 						}
 					}

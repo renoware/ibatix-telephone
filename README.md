@@ -1,3 +1,20 @@
+# ibatix Téléphone
+
+Application softphone iOS de Renowave pour le standard téléphonique ibatix (Asterisk), dérivée de
+[Linphone iOS](https://github.com/BelledonneCommunications/linphone-iphone) de Belledonne Communications.
+Elle reçoit les appels du standard application fermée grâce aux notifications push VoIP (passerelle Flexisip).
+
+Distribuée sous licence **GNU GPL v3**, comme Linphone (voir `LICENSE.txt`). Le code source de chaque
+version distribuée est publié ici. Les modifications par rapport à Linphone sont visibles dans l'historique
+git (branche `main`, au-dessus de la branche amont `upstream`).
+
+Modifications principales :
+- identifiants de l'application (`com.ibatix.telephone`) et équipe Apple Renowave ;
+- identifiant d'équipe Apple renseigné dans la configuration push (le SDK annonçait une valeur factice) ;
+- retrait du droit de filtrage des notifications (soumis à autorisation Apple).
+
+---
+
 
 Linphone is an open source softphone for voice and video over IP calling and instant messaging. It is fully SIP-based, for all calling, presence and IM features.
 General description is available from [linphone web site](https://www.linphone.org/technical-corner/linphone)
