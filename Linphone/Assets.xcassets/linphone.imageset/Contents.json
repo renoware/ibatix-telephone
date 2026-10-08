@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "ibatix-logo.png",
+      "filename" : "ibatix-logo.svg",
       "idiom" : "universal"
     }
   ],
@@ -10,6 +10,6 @@
     "version" : 1
   },
   "properties" : {
-    "preserves-vector-representation" : false
+    "preserves-vector-representation" : true
   }
 }
