@@ -51,8 +51,8 @@ final class IbatixStatutModel: ObservableObject {
 	@Published var enCours = false
 	@Published var erreur: String?
 
-	private var odooUrl = ""
-	private var cle = ""
+	private(set) var odooUrl = ""
+	private(set) var cle = ""
 
 	static func couleur(_ statut: String) -> Color {
 		switch statut {
@@ -72,6 +72,7 @@ final class IbatixStatutModel: ObservableObject {
 				self.cle = cle
 				self.configure = !self.odooUrl.isEmpty && !cle.isEmpty
 				if self.configure {
+					IbatixCorrespondantsModel.shared.relancer()
 					await self.envoyer(nil)
 				}
 			}
@@ -255,5 +256,72 @@ struct IbatixStatutFeuille: View {
 		}
 		.buttonStyle(.plain)
 		.disabled(modele.enCours)
+	}
+}
+
+// ibatix : Récents enrichis. Les numéros de l'historique sont envoyés à <odoo_url>/telephonie/app/correspondants
+// (même clé que le statut) ; Odoo répond, aux droits du commercial, le nom et la piste en cours de chacun.
+// Rien n'est écrit sur le téléphone : les fiches restent en mémoire et sont redemandées au retour au premier plan.
+
+struct IbatixFiche: Decodable, Equatable {
+	let type: String
+	let nom: String
+	let detail: String
+}
+
+private struct IbatixReponseCorrespondants: Decodable {
+	let correspondants: [String: IbatixFiche]?
+}
+
+@MainActor
+final class IbatixCorrespondantsModel: ObservableObject {
+	static let shared = IbatixCorrespondantsModel()
+
+	@Published private(set) var fiches: [String: IbatixFiche] = [:]
+	private var demandes = Set<String>()
+	private var derniers: [String] = []
+
+	func fiche(_ numero: String?) -> IbatixFiche? {
+		guard let numero = numero, !numero.isEmpty else { return nil }
+		return fiches[numero]
+	}
+
+	/// Demande les numéros pas encore connus (100 au plus par envoi, la limite d'Odoo).
+	func charger(_ numeros: [String]) {
+		derniers = numeros
+		var vus = Set<String>()
+		let nouveaux = numeros.filter { !$0.isEmpty && !demandes.contains($0) && vus.insert($0).inserted }
+		let statut = IbatixStatutModel.shared
+		guard !nouveaux.isEmpty, statut.configure, let url = URL(string: statut.odooUrl + "/telephonie/app/correspondants") else { return }
+		let lot = Array(nouveaux.prefix(100))
+		demandes.formUnion(lot)
+		var requete = URLRequest(url: url, timeoutInterval: 10)
+		requete.httpMethod = "POST"
+		requete.setValue("Bearer " + statut.cle, forHTTPHeaderField: "Authorization")
+		requete.setValue("application/json", forHTTPHeaderField: "Content-Type")
+		requete.httpBody = try? JSONSerialization.data(withJSONObject: ["numeros": lot])
+		Task {
+			do {
+				let (data, reponse) = try await URLSession.shared.data(for: requete)
+				guard (reponse as? HTTPURLResponse)?.statusCode == 200,
+					  let recus = try JSONDecoder().decode(IbatixReponseCorrespondants.self, from: data).correspondants else {
+					demandes.subtract(lot)
+					return
+				}
+				fiches.merge(recus) { _, nouveau in nouveau }
+				if nouveaux.count > lot.count {
+					charger(derniers)
+				}
+			} catch {
+				demandes.subtract(lot)
+				Log.warn("[ibatix] correspondants : \(error.localizedDescription)")
+			}
+		}
+	}
+
+	/// Retour au premier plan ou clé enfin connue : tout redemander (noms et étapes ont pu changer).
+	func relancer() {
+		demandes.removeAll()
+		charger(derniers)
 	}
 }

@@ -259,6 +259,33 @@ struct HistoryContactFragment: View {
 												.frame(minWidth: 80)
 										}
 									})
+									
+									// ibatix : la piste ou le contact du correspondant dans Odoo
+									if let ficheUrl = CallViewModel.ibatixFicheUrl(odooUrl: IbatixStatutModel.shared.odooUrl,
+																				   numero: historyModel.addressLinphone.username ?? "") {
+										Spacer()
+										
+										Button(action: {
+											UIApplication.shared.open(ficheUrl)
+										}, label: {
+											VStack {
+												HStack(alignment: .center) {
+													Image("address-book")
+														.renderingMode(.template)
+														.resizable()
+														.foregroundStyle(Color.grayMain2c600)
+														.frame(width: 25, height: 25)
+												}
+												.padding(16)
+												.background(Color.grayMain2c200)
+												.cornerRadius(40)
+												
+												Text("ibatix_call_action_fiche")
+													.default_text_style(styleSize: 14)
+													.frame(minWidth: 80)
+											}
+										})
+									}
                                     
                                     if !AppServices.corePreferences.disableChatFeature {
                                         Spacer()

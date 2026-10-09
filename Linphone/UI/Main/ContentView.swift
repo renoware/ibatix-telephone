@@ -2143,6 +2143,7 @@ struct ContentView: View {
 			orientation = UIDevice.current.orientation
 			if newPhase == .active {
 				ibatixStatut.rafraichir()
+				IbatixCorrespondantsModel.shared.relancer()
 				if let conversationsListVM = conversationsListViewModel {
 					conversationsListVM.computeChatRoomsList()
 				}

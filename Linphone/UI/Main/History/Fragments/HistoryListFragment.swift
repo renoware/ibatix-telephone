@@ -32,10 +32,26 @@ struct HistoryListFragment: View {
 	@Binding var showingSheet: Bool
 	@Binding var text: String
 	
+	// ibatix : filtre Tous / Manqués et fiches Odoo des correspondants
+	@ObservedObject private var ibatixCorrespondants = IbatixCorrespondantsModel.shared
+	@State private var ibatixManquesSeuls = false
+	
+	private var ibatixAppels: [HistoryModel] {
+		historyListViewModel.callLogs.filter { !ibatixManquesSeuls || ($0.status == .Missed && !$0.isOutgoing) }
+	}
+	
 	var body: some View {
 		VStack {
+			Picker("", selection: $ibatixManquesSeuls) {
+				Text("ibatix_recents_tous").tag(false)
+				Text("ibatix_recents_manques").tag(true)
+			}
+			.pickerStyle(.segmented)
+			.padding(.horizontal, 20)
+			.padding(.top, 12)
+			
 			List {
-				ForEach(historyListViewModel.callLogs) { historyModel in
+				ForEach(ibatixAppels) { historyModel in
 					HistoryRow(historyModel: historyModel, showingSheet: $showingSheet)
 				}
 				
@@ -74,7 +90,7 @@ struct HistoryListFragment: View {
 			.listStyle(.plain)
 			.overlay(
 				VStack {
-					if historyListViewModel.callLogs.isEmpty &&
+					if ibatixAppels.isEmpty &&
 						(
 							historyListViewModel.callLogsFilter.isEmpty ||
 							(!historyListViewModel.callLogsFilter.isEmpty &&
@@ -100,6 +116,9 @@ struct HistoryListFragment: View {
 				if !historyListViewModel.callLogsFilter.isEmpty {
 					historyListViewModel.resetFilterCallLogs()
 				}
+			}
+			.task(id: historyListViewModel.callLogs.count) {
+				ibatixCorrespondants.charger(historyListViewModel.callLogs.compactMap { $0.isConf ? nil : $0.addressLinphone.username })
 			}
 		}
 		.navigationTitle("")
@@ -177,21 +196,36 @@ struct HistoryRow: View {
 	@EnvironmentObject var historyListViewModel: HistoryListViewModel
 	
 	@ObservedObject var historyModel: HistoryModel
+	@ObservedObject private var ibatixCorrespondants = IbatixCorrespondantsModel.shared
 	
 	@Binding var showingSheet: Bool
+	
+	// ibatix : nom et piste venus d'Odoo, sinon ce que Linphone connaît
+	private var ibatixFiche: IbatixFiche? {
+		historyModel.isConf ? nil : ibatixCorrespondants.fiche(historyModel.addressLinphone.username)
+	}
+	private var nomAffiche: String {
+		if let fiche = ibatixFiche, fiche.type != "inconnu" || historyModel.avatarModel?.friend == nil {
+			return fiche.nom
+		}
+		return historyModel.addressName
+	}
+	private var manque: Bool {
+		historyModel.status == .Missed && !historyModel.isOutgoing
+	}
 
 	var body: some View {
 		HStack {
 			HStack {
 				if !historyModel.isConf {
-					if historyModel.avatarModel != nil {
+					if historyModel.avatarModel != nil && (ibatixFiche == nil || historyModel.avatarModel?.friend != nil) {
 						Avatar(contactAvatarModel: historyModel.avatarModel!, avatarSize: 50)
 					} else {
-						if !historyModel.addressName.isEmpty {
+						if !nomAffiche.isEmpty {
 							Image(uiImage: contactsManager.textToImage(
-								firstName: historyModel.addressName,
-								lastName: historyModel.addressName.components(separatedBy: " ").count > 1
-								? historyModel.addressName.components(separatedBy: " ")[1]
+								firstName: nomAffiche,
+								lastName: nomAffiche.components(separatedBy: " ").count > 1
+								? nomAffiche.components(separatedBy: " ")[1]
 								: ""))
 							.resizable()
 							.frame(width: 50, height: 50)
@@ -225,10 +259,17 @@ struct HistoryRow: View {
 				VStack(spacing: 0) {
 					Spacer()
 					if !historyModel.isConf {
-						Text(historyModel.addressName)
+						Text(nomAffiche)
 							.default_text_style(styleSize: 14)
+							.foregroundStyle(manque ? Color.redDanger500 : Color.grayMain2c700)
 							.frame(maxWidth: .infinity, alignment: .leading)
 							.lineLimit(1)
+						if let detail = ibatixFiche?.detail, !detail.isEmpty {
+							Text(detail)
+								.default_text_style_300(styleSize: 12)
+								.frame(maxWidth: .infinity, alignment: .leading)
+								.lineLimit(1)
+						}
 					} else {
 						Text(historyModel.subject)
 							.default_text_style(styleSize: 14)
@@ -272,7 +313,7 @@ struct HistoryRow: View {
 				}
 			}
 		}
-		.frame(height: 50)
+		.frame(height: ibatixFiche?.detail.isEmpty == false ? 62 : 50)
 		.buttonStyle(.borderless)
 		.listRowInsets(EdgeInsets(top: 6, leading: 20, bottom: 6, trailing: 20))
 		.listRowSeparator(.hidden)

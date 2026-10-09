@@ -660,3 +660,5 @@
 "ibatix_statut_poste" = "Poste %@ · %@";
 "ibatix_statut_erreur" = "Statut indisponible : vérifiez la connexion.";
 "ibatix_statut_cle_refusee" = "Ce téléphone a été déconnecté : rescannez le QR code depuis votre profil.";
+"ibatix_recents_tous" = "Tous";
+"ibatix_recents_manques" = "Manqués";

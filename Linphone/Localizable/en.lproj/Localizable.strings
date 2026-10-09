@@ -665,3 +665,5 @@
 "ibatix_statut_poste" = "Extension %@ · %@";
 "ibatix_statut_erreur" = "Status unavailable: check the connection.";
 "ibatix_statut_cle_refusee" = "This phone was disconnected: scan the QR code again from your profile.";
+"ibatix_recents_tous" = "All";
+"ibatix_recents_manques" = "Missed";
