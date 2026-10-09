@@ -44,6 +44,8 @@ struct ContentView: View {
 	
 	@State private var orientation = UIDevice.current.orientation
 	@State var sideMenuIsOpen: Bool = false
+	@ObservedObject private var ibatixStatut = IbatixStatutModel.shared
+	@State private var ibatixStatutFeuille = false
 	
 	@State private var searchIsActive = false
 	@State private var text = ""
@@ -584,8 +586,18 @@ struct ContentView: View {
                                                             }
                                                         }
                                                         .id(imagePath)
+                                                        .overlay(alignment: .bottomTrailing) {
+                                                            IbatixPastille(taille: 14) // ibatix : pastille d'état
+                                                        }
+                                                        .task(id: imagePath) {
+                                                            ibatixStatut.rafraichir()
+                                                        }
                                                         .onTapGesture {
-                                                            openMenu()
+                                                            if ibatixStatut.configure {
+                                                                ibatixStatutFeuille = true
+                                                            } else {
+                                                                openMenu()
+                                                            }
                                                         }
                                                         .onReceive(NotificationCenter.default.publisher(for: NSNotification.Name("ImageChanged"))) { _ in
                                                             imageTmp = nil
@@ -2070,6 +2082,13 @@ struct ContentView: View {
 				isShowUpdatePasswordPopup = true
 			}
 		}
+		.sheet(isPresented: $ibatixStatutFeuille) {
+			if #available(iOS 16.0, *) {
+				IbatixStatutFeuille().presentationDetents([.medium, .large])
+			} else {
+				IbatixStatutFeuille()
+			}
+		}
 		.sheet(isPresented: $securitySheet, onDismiss: {
 			securitySheet = false
 		}, content: {
@@ -2123,6 +2142,7 @@ struct ContentView: View {
 		.onChange(of: scenePhase) { newPhase in
 			orientation = UIDevice.current.orientation
 			if newPhase == .active {
+				ibatixStatut.rafraichir()
 				if let conversationsListVM = conversationsListViewModel {
 					conversationsListVM.computeChatRoomsList()
 				}

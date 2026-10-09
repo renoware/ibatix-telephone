@@ -646,3 +646,17 @@
 
 "ibatix_call_action_fiche" = "Fiche";
 "ibatix_notification_fiche_body" = "Touchez pour ouvrir le dossier de l’appelant";
+"ibatix_statut_titre" = "Mon statut";
+"ibatix_statut_dispo" = "Disponible";
+"ibatix_statut_dispo_detail" = "Je reçois tous les appels";
+"ibatix_statut_dnd_heure" = "Ne pas déranger pendant 1 heure";
+"ibatix_statut_dnd_soir" = "Ne pas déranger jusqu’à %@";
+"ibatix_statut_dnd_sans_fin" = "Ne pas déranger jusqu’à nouvel ordre";
+"ibatix_statut_dnd_detail" = "Mes appels vont à ma messagerie";
+"ibatix_statut_renvoi" = "Renvoyer vers un collègue";
+"ibatix_statut_renvoi_detail" = "Mes appels directs sonnent chez lui";
+"ibatix_statut_retour" = "Retour";
+"ibatix_statut_aucun_collegue" = "Aucun collègue n’a de poste.";
+"ibatix_statut_poste" = "Poste %@ · %@";
+"ibatix_statut_erreur" = "Statut indisponible : vérifiez la connexion.";
+"ibatix_statut_cle_refusee" = "Ce téléphone a été déconnecté : rescannez le QR code depuis votre profil.";

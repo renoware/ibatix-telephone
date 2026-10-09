@@ -92,6 +92,7 @@
 		D71FCA832AE14D6E00D2E43E /* ContactFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71FCA822AE14D6E00D2E43E /* ContactFragment.swift */; };
 		D720E6AD2BAD822000DDFD87 /* ParticipantModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D720E6AC2BAD822000DDFD87 /* ParticipantModel.swift */; };
 		D72250692ADFBF2D008FB426 /* SideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72250682ADFBF2D008FB426 /* SideMenu.swift */; };
+		1BA71C0A2F90000100A7C0DE /* IbatixStatut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BA71C0B2F90000100A7C0DE /* IbatixStatut.swift */; };
 		D72343302ACEFEF8009AA24E /* QrCodeScannerFragment.swift in Sources */ = {isa = PBXBuildFile; fileRef = D723432F2ACEFEF8009AA24E /* QrCodeScannerFragment.swift */; };
 		D72343322ACEFF58009AA24E /* QRScannerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72343312ACEFF58009AA24E /* QRScannerController.swift */; };
 		D72343342ACEFFC3009AA24E /* QRScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = D72343332ACEFFC3009AA24E /* QRScanner.swift */; };
@@ -372,6 +373,7 @@
 		D71FCA822AE14D6E00D2E43E /* ContactFragment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactFragment.swift; sourceTree = "<group>"; };
 		D720E6AC2BAD822000DDFD87 /* ParticipantModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantModel.swift; sourceTree = "<group>"; };
 		D72250682ADFBF2D008FB426 /* SideMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SideMenu.swift; sourceTree = "<group>"; };
+		1BA71C0B2F90000100A7C0DE /* IbatixStatut.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IbatixStatut.swift; sourceTree = "<group>"; };
 		D723432F2ACEFEF8009AA24E /* QrCodeScannerFragment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QrCodeScannerFragment.swift; sourceTree = "<group>"; };
 		D72343312ACEFF58009AA24E /* QRScannerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerController.swift; sourceTree = "<group>"; };
 		D72343332ACEFFC3009AA24E /* QRScanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScanner.swift; sourceTree = "<group>"; };
@@ -970,6 +972,7 @@
 				D750D3382AD3E6EE00EC99C5 /* PopupLoadingView.swift */,
 				D706BA812ADD72D100278F45 /* DeviceRotationViewModifier.swift */,
 				D72250682ADFBF2D008FB426 /* SideMenu.swift */,
+				1BA71C0B2F90000100A7C0DE /* IbatixStatut.swift */,
 				C62817332C1C7C7400DBA646 /* HelpView.swift */,
 				C6DC4E3E2C19C289009096FD /* SideMenuEntry.swift */,
 				C62817272C1B389700DBA646 /* SideMenuAccountRow.swift */,
@@ -1779,6 +1782,7 @@
 				D74DA0FE2C047F0700A85602 /* RedialHelper.swift in Sources */,
 				66D382052CEB7E0A0063E1C5 /* ShortcutModel.swift in Sources */,
 				D72250692ADFBF2D008FB426 /* SideMenu.swift in Sources */,
+				1BA71C0A2F90000100A7C0DE /* IbatixStatut.swift in Sources */,
 				D7AEB9A02F3E219600298546 /* ContactDeviceModel.swift in Sources */,
 				D703F7082DC8C605005B8F75 /* FilePicker.swift in Sources */,
 				C6DC4E3F2C19C289009096FD /* SideMenuEntry.swift in Sources */,

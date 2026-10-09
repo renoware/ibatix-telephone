@@ -651,3 +651,17 @@
 
 "ibatix_call_action_fiche" = "Record";
 "ibatix_notification_fiche_body" = "Tap to open the caller’s record";
+"ibatix_statut_titre" = "My status";
+"ibatix_statut_dispo" = "Available";
+"ibatix_statut_dispo_detail" = "I receive all calls";
+"ibatix_statut_dnd_heure" = "Do not disturb for 1 hour";
+"ibatix_statut_dnd_soir" = "Do not disturb until %@";
+"ibatix_statut_dnd_sans_fin" = "Do not disturb until further notice";
+"ibatix_statut_dnd_detail" = "My calls go to my voicemail";
+"ibatix_statut_renvoi" = "Forward to a colleague";
+"ibatix_statut_renvoi_detail" = "My direct calls ring on their phone";
+"ibatix_statut_retour" = "Back";
+"ibatix_statut_aucun_collegue" = "No colleague has an extension.";
+"ibatix_statut_poste" = "Extension %@ · %@";
+"ibatix_statut_erreur" = "Status unavailable: check the connection.";
+"ibatix_statut_cle_refusee" = "This phone was disconnected: scan the QR code again from your profile.";
